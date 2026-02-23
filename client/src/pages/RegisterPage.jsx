@@ -42,6 +42,12 @@ export default function RegisterPage() {
         try {
             const { confirmPassword, ...registerData } = formData;
             await register(registerData);
+
+            // Request notification permission during account creation
+            if ('Notification' in window && Notification.permission !== 'granted') {
+                await Notification.requestPermission();
+            }
+
             navigate('/dashboard');
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed. Please try again.');
@@ -55,8 +61,8 @@ export default function RegisterPage() {
             <div className="glass-card w-full max-w-md p-8 animate-fade-in">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gradient mb-2">
-                        Join HealthTrack AI
+                    <h1 className="text-xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 whitespace-nowrap">
+                        Join Health Tracker
                     </h1>
                     <p className="text-gray-600 dark:text-gray-400">
                         Start your personalized health journey today

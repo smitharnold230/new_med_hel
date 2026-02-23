@@ -38,7 +38,7 @@ export default function HealthLogger({ onSubmit }) {
             if (formData.oxygenLevel) cleanData.oxygenLevel = Number(formData.oxygenLevel);
             if (formData.notes && formData.notes.trim()) cleanData.notes = formData.notes.trim();
 
-            console.log('Submitting health log:', cleanData);
+
             await onSubmit(cleanData);
 
             // Reset form
@@ -87,7 +87,9 @@ export default function HealthLogger({ onSubmit }) {
                 {/* Blood Pressure */}
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="form-label">Systolic (BP)</label>
+                        <div className="min-h-[2rem] flex items-end mb-1">
+                            <label className="form-label mb-0">Systolic (BP)</label>
+                        </div>
                         <input
                             type="number"
                             name="systolic"
@@ -100,7 +102,9 @@ export default function HealthLogger({ onSubmit }) {
                         />
                     </div>
                     <div>
-                        <label className="form-label">Diastolic (BP)</label>
+                        <div className="min-h-[2rem] flex items-end mb-1">
+                            <label className="form-label mb-0">Diastolic (BP)</label>
+                        </div>
                         <input
                             type="number"
                             name="diastolic"
@@ -117,7 +121,9 @@ export default function HealthLogger({ onSubmit }) {
                 {/* Blood Sugar & Weight */}
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="form-label">Blood Sugar (mg/dL)</label>
+                        <div className="min-h-[3rem] flex items-end mb-1">
+                            <label className="form-label mb-0">Blood Sugar (mg/dL)</label>
+                        </div>
                         <input
                             type="number"
                             name="bloodSugar"
@@ -129,7 +135,9 @@ export default function HealthLogger({ onSubmit }) {
                         />
                     </div>
                     <div>
-                        <label className="form-label">Weight (kg)</label>
+                        <div className="min-h-[3rem] flex items-end mb-1">
+                            <label className="form-label mb-0">Weight (kg)</label>
+                        </div>
                         <input
                             type="number"
                             name="weight"
@@ -145,7 +153,9 @@ export default function HealthLogger({ onSubmit }) {
                 {/* Heart Rate & Temperature */}
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="form-label">Heart Rate (bpm)</label>
+                        <div className="min-h-[3rem] flex items-end mb-1">
+                            <label className="form-label mb-0">Heart Rate (bpm)</label>
+                        </div>
                         <input
                             type="number"
                             name="heartRate"
@@ -158,7 +168,9 @@ export default function HealthLogger({ onSubmit }) {
                         />
                     </div>
                     <div>
-                        <label className="form-label">Temperature (°F)</label>
+                        <div className="min-h-[3rem] flex items-end mb-1">
+                            <label className="form-label mb-0">Temperature (°F)</label>
+                        </div>
                         <input
                             type="number"
                             name="temperature"

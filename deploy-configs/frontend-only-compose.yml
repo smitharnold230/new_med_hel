@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  client:
+    image: ${DOCKER_HUB_USER}/healthtrack-client:latest
+    container_name: healthtrack-client
+    restart: unless-stopped
+    environment:
+      - BACKEND_IP=${BACKEND_INSTANCE_IP}
+    ports:
+      - "80:80"

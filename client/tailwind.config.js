@@ -23,6 +23,7 @@ export default {
                 success: '#10b981',
                 warning: '#f59e0b',
                 danger: '#ef4444',
+                border: '#e5e7eb', // gray-200
             },
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],

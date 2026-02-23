@@ -19,7 +19,7 @@ const sendEmail = async (options) => {
 
         // Email options
         const mailOptions = {
-            from: `HealthTrack AI <${process.env.EMAIL_USER}>`,
+            from: `Health Tracker <${process.env.EMAIL_USER}>`,
             to: options.to,
             subject: options.subject,
             text: options.text,

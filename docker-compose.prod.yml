@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: healthtrack-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-healthtrack_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-healthtrack_password}
+      POSTGRES_DB: ${DB_NAME:-healthtrack}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U healthtrack_user -d healthtrack"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - healthtrack-network
+
+  server:
+    image: ${DOCKER_HUB_USER:-YOUR_USERNAME}/healthtrack-server:latest
+    container_name: healthtrack-server
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER:-healthtrack_user}:${DB_PASSWORD:-healthtrack_password}@postgres:5432/${DB_NAME:-healthtrack}
+      - JWT_SECRET=${JWT_SECRET:-dev-secret-key-123}
+      - CLIENT_URL=${CLIENT_URL:-http://localhost}
+      - PORT=5000
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - NODE_ENV=production
+    networks:
+      - healthtrack-network
+
+  client:
+    image: ${DOCKER_HUB_USER:-YOUR_USERNAME}/healthtrack-client:latest
+    container_name: healthtrack-client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "80:80"
+    networks:
+      - healthtrack-network
+
+networks:
+  healthtrack-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

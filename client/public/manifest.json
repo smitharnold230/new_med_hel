@@ -1,0 +1,21 @@
+{
+    "short_name": "HealthTracker",
+    "name": "Personal Health Tracker & AI Assistant",
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "sizes": "64x64 32x32 24x24 16x16",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "/vite.svg",
+            "type": "image/svg+xml",
+            "sizes": "192x192 512x512",
+            "purpose": "any maskable"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#14b8a6",
+    "background_color": "#ffffff"
+}

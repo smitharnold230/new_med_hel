@@ -1,4 +1,4 @@
-# Docker PostgreSQL Setup for HealthTrack AI
+# Docker PostgreSQL Setup for Health Tracker
 
 ## Quick Start
 

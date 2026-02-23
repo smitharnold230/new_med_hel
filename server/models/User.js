@@ -58,6 +58,18 @@ const User = sequelize.define('User', {
     verificationToken: {
         type: DataTypes.STRING(255),
         allowNull: true
+    },
+    reminderTime: {
+        type: DataTypes.INTEGER,
+        defaultValue: 20,
+        validate: {
+            min: 0,
+            max: 23
+        }
+    },
+    aiDataAccess: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 }, {
     tableName: 'users',

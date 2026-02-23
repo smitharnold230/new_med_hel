@@ -29,6 +29,7 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
+            console.error('Unauthorized access - redirecting to login');
             // Token expired or invalid
             localStorage.removeItem('token');
             localStorage.removeItem('user');

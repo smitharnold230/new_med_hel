@@ -8,12 +8,14 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans antialiased;
   }
 }
 
 @layer components {
+
   /* Glassmorphism Card */
   .glass-card {
     @apply bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-xl border border-gray-200/50 dark:border-gray-700/50;
@@ -68,7 +70,7 @@
 
   /* Page Container */
   .page-container {
-    @apply min-h-screen w-full p-6 max-w-7xl mx-auto;
+    @apply min-h-screen w-full p-4 md:p-6 max-w-7xl mx-auto;
   }
 
   /* Gradient Background */
@@ -91,6 +93,18 @@
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
+}
+
+.page-container {
+  min-height: calc(100vh - 4rem);
+  padding-bottom: 5rem;
+  /* Space for BottomNav on mobile */
+}
+
+@media (min-width: 768px) {
+  .page-container {
+    padding-bottom: 2rem;
+  }
 }
 
 ::-webkit-scrollbar-track {

@@ -5,7 +5,9 @@ const {
     getHealthLog,
     updateHealthLog,
     deleteHealthLog,
-    getHealthStats
+    getHealthStats,
+    shareHealthReport,
+    exportHealthLogs
 } = require('../controllers/healthController');
 const { protect } = require('../middleware/auth');
 
@@ -26,5 +28,11 @@ router.route('/logs/:id')
 
 // Statistics
 router.get('/stats', getHealthStats);
+
+// Share Report
+router.post('/share', shareHealthReport);
+
+// Export logs
+router.get('/export', exportHealthLogs);
 
 module.exports = router;

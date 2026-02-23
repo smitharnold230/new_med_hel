@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }) => {
 
     const value = {
         user,
+        token: authService.getToken(),
         loading,
         register,
         login,

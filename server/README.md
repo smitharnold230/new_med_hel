@@ -1,4 +1,4 @@
-# HealthTrack AI - Backend API
+# Health Tracker - Backend API
 
 ## Setup Instructions
 

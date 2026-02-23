@@ -1,21 +1,38 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getHealthLogs, createHealthLog } from '../services/healthService';
 import HealthLogger from '../components/health/HealthLogger';
 import HealthSummary from '../components/dashboard/HealthSummary';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import Navbar from '../components/common/Navbar';
+import { useUI } from '../context/UIContext';
 
 export default function DashboardPage() {
     const { user } = useAuth();
+    const { openLogger } = useUI();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [healthLogs, setHealthLogs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [showLogger, setShowLogger] = useState(false);
 
     useEffect(() => {
         fetchHealthLogs();
-    }, []);
+
+        // Listen for global health log creation to refresh
+        const handleNewLog = () => fetchHealthLogs();
+        window.addEventListener('health-log-created', handleNewLog);
+
+        // Open logger if action=log is in URL
+        if (searchParams.get('action') === 'log') {
+            openLogger();
+            // Clear the param after opening so it doesn't reopen on refresh
+            const newParams = new URLSearchParams(searchParams);
+            newParams.delete('action');
+            setSearchParams(newParams, { replace: true });
+        }
+
+        return () => window.removeEventListener('health-log-created', handleNewLog);
+    }, [searchParams, setSearchParams, openLogger]);
 
     const fetchHealthLogs = async () => {
         try {
@@ -25,17 +42,6 @@ export default function DashboardPage() {
             console.error('Error fetching health logs:', error);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleLogSubmit = async (logData) => {
-        try {
-            await createHealthLog(logData);
-            setShowLogger(false);
-            fetchHealthLogs(); // Refresh logs
-        } catch (error) {
-            console.error('Error creating log:', error);
-            throw error;
         }
     };
 
@@ -49,10 +55,10 @@ export default function DashboardPage() {
             <div className="page-container gradient-bg">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                    <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2 whitespace-nowrap overflow-hidden text-ellipsis">
                         Welcome back, {user?.name}! 👋
                     </h1>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <p className="text-xs sm:text-base text-gray-600 dark:text-gray-400">
                         Track your health metrics and monitor your wellness journey
                     </p>
                 </div>
@@ -60,29 +66,19 @@ export default function DashboardPage() {
                 {/* Quick Actions */}
                 <div className="mb-8 flex gap-3">
                     <button
-                        onClick={() => setShowLogger(!showLogger)}
-                        className="btn-primary"
+                        onClick={openLogger}
+                        className="btn-primary flex items-center gap-1.5 whitespace-nowrap px-3 sm:px-6 py-2 text-sm sm:text-base"
                     >
-                        {showLogger ? '✕ Close Logger' : '+ Log Health Data'}
+                        + Log Health Data
                     </button>
-                    <Link to="/charts" className="btn-secondary">
-                        📊 View Charts
-                    </Link>
                 </div>
-
-                {/* Health Logger */}
-                {showLogger && (
-                    <div className="mb-8 animate-slide-up">
-                        <HealthLogger onSubmit={handleLogSubmit} />
-                    </div>
-                )}
 
                 {/* Health Summary */}
                 <HealthSummary logs={healthLogs} />
 
                 {/* Recent Logs Table */}
                 <div className="glass-card p-6 mt-8">
-                    <h2 className="text-2xl font-bold mb-4">Recent Health Logs</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold mb-4 whitespace-nowrap">Recent Health Logs</h2>
 
                     {healthLogs.length === 0 ? (
                         <div className="text-center py-12">
@@ -90,7 +86,7 @@ export default function DashboardPage() {
                                 No health logs yet. Start tracking your health today!
                             </p>
                             <button
-                                onClick={() => setShowLogger(true)}
+                                onClick={openLogger}
                                 className="btn-primary"
                             >
                                 Create Your First Log

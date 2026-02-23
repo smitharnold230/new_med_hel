@@ -1,4 +1,4 @@
-# Quick Commands - HealthTrack AI
+# Quick Commands - Health Tracker
 
 ## Start Everything (First Time)
 

@@ -40,9 +40,9 @@ const register = async (req, res, next) => {
             const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
             await sendEmail({
                 to: email,
-                subject: 'Welcome to HealthTrack AI - Verify Your Email',
+                subject: 'Welcome to Health Tracker - Verify Your Email',
                 html: `
-          <h1>Welcome to HealthTrack AI!</h1>
+          <h1>Welcome to Health Tracker!</h1>
           <p>Hi ${name},</p>
           <p>Thank you for registering. Please verify your email by clicking the link below:</p>
           <a href="${verificationUrl}">${verificationUrl}</a>
@@ -141,7 +141,7 @@ const getProfile = async (req, res, next) => {
  */
 const updateProfile = async (req, res, next) => {
     try {
-        const { name, dateOfBirth, gender, phone } = req.body;
+        const { name, dateOfBirth, gender, phone, reminderTime, aiDataAccess } = req.body;
 
         const user = await User.findByPk(req.user.id);
 
@@ -149,6 +149,8 @@ const updateProfile = async (req, res, next) => {
         if (dateOfBirth) user.dateOfBirth = dateOfBirth;
         if (gender) user.gender = gender;
         if (phone) user.phone = phone;
+        if (reminderTime !== undefined) user.reminderTime = reminderTime;
+        if (aiDataAccess !== undefined) user.aiDataAccess = aiDataAccess;
 
         await user.save();
 
@@ -156,6 +158,57 @@ const updateProfile = async (req, res, next) => {
             success: true,
             message: 'Profile updated successfully',
             user
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * @desc    Change password
+ * @route   PUT /api/auth/change-password
+ * @access  Private
+ */
+const changePassword = async (req, res, next) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        const user = await User.findByPk(req.user.id);
+
+        // Check current password
+        const isMatch = await user.comparePassword(currentPassword);
+        if (!isMatch) {
+            return res.status(401).json({
+                success: false,
+                message: 'Incorrect current password'
+            });
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Password updated successfully'
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * @desc    Delete account
+ * @route   DELETE /api/auth/delete-account
+ * @access  Private
+ */
+const deleteAccount = async (req, res, next) => {
+    try {
+        const user = await User.findByPk(req.user.id);
+        await user.destroy();
+
+        res.status(200).json({
+            success: true,
+            message: 'Account deleted successfully'
         });
     } catch (error) {
         next(error);
@@ -198,5 +251,7 @@ module.exports = {
     login,
     getProfile,
     updateProfile,
-    verifyEmail
+    verifyEmail,
+    changePassword,
+    deleteAccount
 };

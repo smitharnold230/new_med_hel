@@ -4,7 +4,9 @@ const {
     login,
     getProfile,
     updateProfile,
-    verifyEmail
+    verifyEmail,
+    changePassword,
+    deleteAccount
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 
@@ -18,5 +20,7 @@ router.post('/verify-email', verifyEmail);
 // Protected routes
 router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfile);
+router.put('/change-password', protect, changePassword);
+router.delete('/delete-account', protect, deleteAccount);
 
 module.exports = router;
